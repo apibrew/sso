@@ -26,3 +26,7 @@ properties:
       type: string
   redirectUrl:
     type: string
+  enabled:
+    type: bool
+    required: true
+    defaultValue: true

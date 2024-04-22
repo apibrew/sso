@@ -62,28 +62,6 @@ func (m *Oauth2ConfigMapper) ToProperties(oauth2Config *Oauth2Config) map[string
 		properties["id"] = var_Id_mapped
 	}
 
-	var_ClientId := oauth2Config.ClientId
-
-	var var_ClientId_mapped *structpb.Value
-
-	var var_ClientId_err error
-	var_ClientId_mapped, var_ClientId_err = types.ByResourcePropertyType(model.ResourceProperty_STRING).Pack(var_ClientId)
-	if var_ClientId_err != nil {
-		panic(var_ClientId_err)
-	}
-	properties["clientId"] = var_ClientId_mapped
-
-	var_ClientSecret := oauth2Config.ClientSecret
-
-	var var_ClientSecret_mapped *structpb.Value
-
-	var var_ClientSecret_err error
-	var_ClientSecret_mapped, var_ClientSecret_err = types.ByResourcePropertyType(model.ResourceProperty_STRING).Pack(var_ClientSecret)
-	if var_ClientSecret_err != nil {
-		panic(var_ClientSecret_err)
-	}
-	properties["clientSecret"] = var_ClientSecret_mapped
-
 	var_Scopes := oauth2Config.Scopes
 
 	if var_Scopes != nil {
@@ -143,6 +121,17 @@ func (m *Oauth2ConfigMapper) ToProperties(oauth2Config *Oauth2Config) map[string
 		properties["redirectUrl"] = var_RedirectUrl_mapped
 	}
 
+	var_Enabled := oauth2Config.Enabled
+
+	var var_Enabled_mapped *structpb.Value
+
+	var var_Enabled_err error
+	var_Enabled_mapped, var_Enabled_err = types.ByResourcePropertyType(model.ResourceProperty_BOOL).Pack(var_Enabled)
+	if var_Enabled_err != nil {
+		panic(var_Enabled_err)
+	}
+	properties["enabled"] = var_Enabled_mapped
+
 	var_Name := oauth2Config.Name
 
 	var var_Name_mapped *structpb.Value
@@ -162,6 +151,28 @@ func (m *Oauth2ConfigMapper) ToProperties(oauth2Config *Oauth2Config) map[string
 		var_Provider_mapped = structpb.NewStructValue(&structpb.Struct{Fields: Oauth2ProviderMapperInstance.ToProperties(var_Provider)})
 		properties["provider"] = var_Provider_mapped
 	}
+
+	var_ClientId := oauth2Config.ClientId
+
+	var var_ClientId_mapped *structpb.Value
+
+	var var_ClientId_err error
+	var_ClientId_mapped, var_ClientId_err = types.ByResourcePropertyType(model.ResourceProperty_STRING).Pack(var_ClientId)
+	if var_ClientId_err != nil {
+		panic(var_ClientId_err)
+	}
+	properties["clientId"] = var_ClientId_mapped
+
+	var_ClientSecret := oauth2Config.ClientSecret
+
+	var var_ClientSecret_mapped *structpb.Value
+
+	var var_ClientSecret_err error
+	var_ClientSecret_mapped, var_ClientSecret_err = types.ByResourcePropertyType(model.ResourceProperty_STRING).Pack(var_ClientSecret)
+	if var_ClientSecret_err != nil {
+		panic(var_ClientSecret_err)
+	}
+	properties["clientSecret"] = var_ClientSecret_mapped
 
 	var_Version := oauth2Config.Version
 
@@ -191,32 +202,6 @@ func (m *Oauth2ConfigMapper) FromProperties(properties map[string]*structpb.Valu
 		*var_Id_mapped = val.(uuid.UUID)
 
 		s.Id = var_Id_mapped
-	}
-	if properties["clientId"] != nil && properties["clientId"].AsInterface() != nil {
-
-		var_ClientId := properties["clientId"]
-		val, err := types.ByResourcePropertyType(model.ResourceProperty_STRING).UnPack(var_ClientId)
-
-		if err != nil {
-			panic(err)
-		}
-
-		var_ClientId_mapped := val.(string)
-
-		s.ClientId = var_ClientId_mapped
-	}
-	if properties["clientSecret"] != nil && properties["clientSecret"].AsInterface() != nil {
-
-		var_ClientSecret := properties["clientSecret"]
-		val, err := types.ByResourcePropertyType(model.ResourceProperty_STRING).UnPack(var_ClientSecret)
-
-		if err != nil {
-			panic(err)
-		}
-
-		var_ClientSecret_mapped := val.(string)
-
-		s.ClientSecret = var_ClientSecret_mapped
 	}
 	if properties["scopes"] != nil && properties["scopes"].AsInterface() != nil {
 
@@ -272,6 +257,19 @@ func (m *Oauth2ConfigMapper) FromProperties(properties map[string]*structpb.Valu
 
 		s.RedirectUrl = var_RedirectUrl_mapped
 	}
+	if properties["enabled"] != nil && properties["enabled"].AsInterface() != nil {
+
+		var_Enabled := properties["enabled"]
+		val, err := types.ByResourcePropertyType(model.ResourceProperty_BOOL).UnPack(var_Enabled)
+
+		if err != nil {
+			panic(err)
+		}
+
+		var_Enabled_mapped := val.(bool)
+
+		s.Enabled = var_Enabled_mapped
+	}
 	if properties["name"] != nil && properties["name"].AsInterface() != nil {
 
 		var_Name := properties["name"]
@@ -291,6 +289,32 @@ func (m *Oauth2ConfigMapper) FromProperties(properties map[string]*structpb.Valu
 		var_Provider_mapped := Oauth2ProviderMapperInstance.FromProperties(var_Provider.GetStructValue().Fields)
 
 		s.Provider = var_Provider_mapped
+	}
+	if properties["clientId"] != nil && properties["clientId"].AsInterface() != nil {
+
+		var_ClientId := properties["clientId"]
+		val, err := types.ByResourcePropertyType(model.ResourceProperty_STRING).UnPack(var_ClientId)
+
+		if err != nil {
+			panic(err)
+		}
+
+		var_ClientId_mapped := val.(string)
+
+		s.ClientId = var_ClientId_mapped
+	}
+	if properties["clientSecret"] != nil && properties["clientSecret"].AsInterface() != nil {
+
+		var_ClientSecret := properties["clientSecret"]
+		val, err := types.ByResourcePropertyType(model.ResourceProperty_STRING).UnPack(var_ClientSecret)
+
+		if err != nil {
+			panic(err)
+		}
+
+		var_ClientSecret_mapped := val.(string)
+
+		s.ClientSecret = var_ClientSecret_mapped
 	}
 	if properties["version"] != nil && properties["version"].AsInterface() != nil {
 
@@ -320,20 +344,6 @@ func (m *Oauth2ConfigMapper) ToUnstructured(oauth2Config *Oauth2Config) unstruct
 		var_Id_mapped = var_Id.String()
 		properties["id"] = var_Id_mapped
 	}
-
-	var_ClientId := oauth2Config.ClientId
-
-	var var_ClientId_mapped interface{}
-
-	var_ClientId_mapped = var_ClientId
-	properties["clientId"] = var_ClientId_mapped
-
-	var_ClientSecret := oauth2Config.ClientSecret
-
-	var var_ClientSecret_mapped interface{}
-
-	var_ClientSecret_mapped = var_ClientSecret
-	properties["clientSecret"] = var_ClientSecret_mapped
 
 	var_Scopes := oauth2Config.Scopes
 
@@ -382,6 +392,13 @@ func (m *Oauth2ConfigMapper) ToUnstructured(oauth2Config *Oauth2Config) unstruct
 		properties["redirectUrl"] = var_RedirectUrl_mapped
 	}
 
+	var_Enabled := oauth2Config.Enabled
+
+	var var_Enabled_mapped interface{}
+
+	var_Enabled_mapped = var_Enabled
+	properties["enabled"] = var_Enabled_mapped
+
 	var_Name := oauth2Config.Name
 
 	var var_Name_mapped interface{}
@@ -397,6 +414,20 @@ func (m *Oauth2ConfigMapper) ToUnstructured(oauth2Config *Oauth2Config) unstruct
 		var_Provider_mapped = Oauth2ProviderMapperInstance.ToUnstructured(var_Provider)
 		properties["provider"] = var_Provider_mapped
 	}
+
+	var_ClientId := oauth2Config.ClientId
+
+	var var_ClientId_mapped interface{}
+
+	var_ClientId_mapped = var_ClientId
+	properties["clientId"] = var_ClientId_mapped
+
+	var_ClientSecret := oauth2Config.ClientSecret
+
+	var var_ClientSecret_mapped interface{}
+
+	var_ClientSecret_mapped = var_ClientSecret
+	properties["clientSecret"] = var_ClientSecret_mapped
 
 	var_Version := oauth2Config.Version
 

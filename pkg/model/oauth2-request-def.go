@@ -28,14 +28,14 @@ var Oauth2RequestResource = &model.Resource{
 			},
 		},
 		{
-			Name: "redirectUrl",
-			Type: model.ResourceProperty_STRING,
-		},
-		{
 			Name:      "config",
 			Type:      model.ResourceProperty_REFERENCE,
 			Required:  true,
 			Reference: &model.Reference{Resource: "Oauth2Config", Namespace: "sso"},
+		},
+		{
+			Name: "redirectUrl",
+			Type: model.ResourceProperty_STRING,
 		},
 		{
 			Name:         "version",
@@ -45,8 +45,8 @@ var Oauth2RequestResource = &model.Resource{
 			ExampleValue: structpb.NewNumberValue(1),
 
 			Annotations: map[string]string{
-				"SpecialProperty":     "true",
 				"AllowEmptyPrimitive": "true",
+				"SpecialProperty":     "true",
 			},
 		},
 	},

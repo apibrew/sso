@@ -28,10 +28,6 @@ var Oauth2AuthenticateResource = &model.Resource{
 			},
 		},
 		{
-			Name: "token",
-			Type: model.ResourceProperty_STRING,
-		},
-		{
 			Name:      "config",
 			Type:      model.ResourceProperty_REFERENCE,
 			Required:  true,
@@ -41,6 +37,10 @@ var Oauth2AuthenticateResource = &model.Resource{
 			Name:     "code",
 			Type:     model.ResourceProperty_STRING,
 			Required: true,
+		},
+		{
+			Name: "token",
+			Type: model.ResourceProperty_STRING,
 		},
 		{
 			Name:         "version",

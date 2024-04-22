@@ -1,0 +1,17 @@
+type: resource
+name: Oauth2Identity
+namespace:
+  name: sso
+properties:
+  config:
+    type: reference
+    reference: sso/Oauth2Config
+    required: true
+  username:
+    type: string
+    required: true
+  details:
+    type: object
+    required: true
+annotations:
+  EnableAudit: "true"

@@ -78,6 +78,7 @@ func (m module) ensureResources() {
 		model2.Oauth2ConfigResource,
 		model2.Oauth2RequestResource,
 		model2.Oauth2AuthenticateResource,
+		model2.Oauth2IdentityResource,
 	}
 
 	for _, resource := range list {

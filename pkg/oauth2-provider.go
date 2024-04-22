@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	errors "errors"
 	"github.com/apibrew/apibrew/pkg/api"
-	"github.com/apibrew/apibrew/pkg/formats/unstructured"
 	"github.com/apibrew/apibrew/pkg/model"
+	"github.com/apibrew/apibrew/pkg/resource_model"
 	"github.com/apibrew/apibrew/pkg/service"
 	"github.com/apibrew/apibrew/pkg/util"
 	model2 "github.com/apibrew/sso/pkg/model"
@@ -97,17 +97,32 @@ func (p oauth2Provider) Authenticate(config *model2.Oauth2Config, code string) (
 	token2, err2 := p.container.GetAuthenticationService().AuthenticateWithoutPassword(util.SystemContext, username, model.TokenTerm_LONG)
 
 	if err2 != nil {
-		_, err = p.api.Create(util.SystemContext, unstructured.Unstructured{
-			"type":     "system/User",
-			"username": username,
-			"password": util.RandomHex(16),
-			"roles": util.ArrayMap(config.NewUserRoles, func(t string) unstructured.Unstructured {
-				return unstructured.Unstructured{
-					"name": t,
+		var user = &resource_model.User{
+			Username: username,
+			Password: util.Pointer(util.RandomHex(16)),
+			Roles: util.ArrayMap(config.NewUserRoles, func(t string) *resource_model.Role {
+				return &resource_model.Role{
+					Name: t,
 				}
 			}),
-			"details": userInfo,
-		})
+		}
+		var userUn = resource_model.UserMapperInstance.ToUnstructured(user)
+		userUn["type"] = "system/User"
+		_, err = p.api.Create(util.SystemContext, userUn)
+
+		if err != nil {
+			return "", err
+		}
+
+		var oauth2Identity = &model2.Oauth2Identity{
+			Details: userInfo,
+			Config: &model2.Oauth2Config{
+				Id: config.Id,
+			},
+			Username: username,
+		}
+
+		_, err = p.api.Create(util.SystemContext, model2.Oauth2IdentityMapperInstance.ToUnstructured(oauth2Identity))
 
 		if err != nil {
 			return "", err

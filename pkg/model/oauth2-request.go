@@ -10,19 +10,19 @@ import "github.com/google/uuid"
 
 type Oauth2Request struct {
 	Id          *uuid.UUID    `json:"id,omitempty"`
-	RedirectUrl *string       `json:"redirectUrl,omitempty"`
 	Config      *Oauth2Config `json:"config,omitempty"`
+	RedirectUrl *string       `json:"redirectUrl,omitempty"`
 	Version     int32         `json:"version,omitempty"`
 }
 
 func (s Oauth2Request) GetId() *uuid.UUID {
 	return s.Id
 }
-func (s Oauth2Request) GetRedirectUrl() *string {
-	return s.RedirectUrl
-}
 func (s Oauth2Request) GetConfig() *Oauth2Config {
 	return s.Config
+}
+func (s Oauth2Request) GetRedirectUrl() *string {
+	return s.RedirectUrl
 }
 func (s Oauth2Request) GetVersion() int32 {
 	return s.Version

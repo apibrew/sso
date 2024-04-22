@@ -28,16 +28,6 @@ var Oauth2ConfigResource = &model.Resource{
 			},
 		},
 		{
-			Name:     "clientId",
-			Type:     model.ResourceProperty_STRING,
-			Required: true,
-		},
-		{
-			Name:     "clientSecret",
-			Type:     model.ResourceProperty_STRING,
-			Required: true,
-		},
-		{
 			Name: "scopes",
 			Type: model.ResourceProperty_LIST,
 			Item: &model.ResourceProperty{
@@ -58,6 +48,12 @@ var Oauth2ConfigResource = &model.Resource{
 			Type: model.ResourceProperty_STRING,
 		},
 		{
+			Name:         "enabled",
+			Type:         model.ResourceProperty_BOOL,
+			Required:     true,
+			DefaultValue: structpb.NewBoolValue(true),
+		},
+		{
 			Name:     "name",
 			Type:     model.ResourceProperty_STRING,
 			Required: true,
@@ -69,6 +65,16 @@ var Oauth2ConfigResource = &model.Resource{
 			Reference: &model.Reference{Resource: "Oauth2Provider", Namespace: "sso"},
 		},
 		{
+			Name:     "clientId",
+			Type:     model.ResourceProperty_STRING,
+			Required: true,
+		},
+		{
+			Name:     "clientSecret",
+			Type:     model.ResourceProperty_STRING,
+			Required: true,
+		},
+		{
 			Name:         "version",
 			Type:         model.ResourceProperty_INT32,
 			Required:     true,
@@ -76,8 +82,8 @@ var Oauth2ConfigResource = &model.Resource{
 			ExampleValue: structpb.NewNumberValue(1),
 
 			Annotations: map[string]string{
-				"SpecialProperty":     "true",
 				"AllowEmptyPrimitive": "true",
+				"SpecialProperty":     "true",
 			},
 		},
 	},
