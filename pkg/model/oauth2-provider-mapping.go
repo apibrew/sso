@@ -62,6 +62,29 @@ func (m *Oauth2ProviderMapper) ToProperties(oauth2Provider *Oauth2Provider) map[
 		properties["id"] = var_Id_mapped
 	}
 
+	var_DefaultScopes := oauth2Provider.DefaultScopes
+
+	if var_DefaultScopes != nil {
+		var var_DefaultScopes_mapped *structpb.Value
+
+		var var_DefaultScopes_l []*structpb.Value
+		for _, value := range var_DefaultScopes {
+
+			var_5x := value
+			var var_5x_mapped *structpb.Value
+
+			var var_5x_err error
+			var_5x_mapped, var_5x_err = types.ByResourcePropertyType(model.ResourceProperty_STRING).Pack(var_5x)
+			if var_5x_err != nil {
+				panic(var_5x_err)
+			}
+
+			var_DefaultScopes_l = append(var_DefaultScopes_l, var_5x_mapped)
+		}
+		var_DefaultScopes_mapped = structpb.NewListValue(&structpb.ListValue{Values: var_DefaultScopes_l})
+		properties["defaultScopes"] = var_DefaultScopes_mapped
+	}
+
 	var_Name := oauth2Provider.Name
 
 	var var_Name_mapped *structpb.Value
@@ -115,29 +138,6 @@ func (m *Oauth2ProviderMapper) ToProperties(oauth2Provider *Oauth2Provider) map[
 		properties["userInfoExtractConfig"] = var_UserInfoExtractConfig_mapped
 	}
 
-	var_DefaultScopes := oauth2Provider.DefaultScopes
-
-	if var_DefaultScopes != nil {
-		var var_DefaultScopes_mapped *structpb.Value
-
-		var var_DefaultScopes_l []*structpb.Value
-		for _, value := range var_DefaultScopes {
-
-			var_5x := value
-			var var_5x_mapped *structpb.Value
-
-			var var_5x_err error
-			var_5x_mapped, var_5x_err = types.ByResourcePropertyType(model.ResourceProperty_STRING).Pack(var_5x)
-			if var_5x_err != nil {
-				panic(var_5x_err)
-			}
-
-			var_DefaultScopes_l = append(var_DefaultScopes_l, var_5x_mapped)
-		}
-		var_DefaultScopes_mapped = structpb.NewListValue(&structpb.ListValue{Values: var_DefaultScopes_l})
-		properties["defaultScopes"] = var_DefaultScopes_mapped
-	}
-
 	var_Version := oauth2Provider.Version
 
 	var var_Version_mapped *structpb.Value
@@ -166,6 +166,26 @@ func (m *Oauth2ProviderMapper) FromProperties(properties map[string]*structpb.Va
 		*var_Id_mapped = val.(uuid.UUID)
 
 		s.Id = var_Id_mapped
+	}
+	if properties["defaultScopes"] != nil && properties["defaultScopes"].AsInterface() != nil {
+
+		var_DefaultScopes := properties["defaultScopes"]
+		var_DefaultScopes_mapped := []string{}
+		for _, v := range var_DefaultScopes.GetListValue().Values {
+
+			var_4x := v
+			val, err := types.ByResourcePropertyType(model.ResourceProperty_STRING).UnPack(var_4x)
+
+			if err != nil {
+				panic(err)
+			}
+
+			var_4x_mapped := val.(string)
+
+			var_DefaultScopes_mapped = append(var_DefaultScopes_mapped, var_4x_mapped)
+		}
+
+		s.DefaultScopes = var_DefaultScopes_mapped
 	}
 	if properties["name"] != nil && properties["name"].AsInterface() != nil {
 
@@ -228,26 +248,6 @@ func (m *Oauth2ProviderMapper) FromProperties(properties map[string]*structpb.Va
 
 		s.UserInfoExtractConfig = var_UserInfoExtractConfig_mapped
 	}
-	if properties["defaultScopes"] != nil && properties["defaultScopes"].AsInterface() != nil {
-
-		var_DefaultScopes := properties["defaultScopes"]
-		var_DefaultScopes_mapped := []string{}
-		for _, v := range var_DefaultScopes.GetListValue().Values {
-
-			var_4x := v
-			val, err := types.ByResourcePropertyType(model.ResourceProperty_STRING).UnPack(var_4x)
-
-			if err != nil {
-				panic(err)
-			}
-
-			var_4x_mapped := val.(string)
-
-			var_DefaultScopes_mapped = append(var_DefaultScopes_mapped, var_4x_mapped)
-		}
-
-		s.DefaultScopes = var_DefaultScopes_mapped
-	}
 	if properties["version"] != nil && properties["version"].AsInterface() != nil {
 
 		var_Version := properties["version"]
@@ -275,6 +275,25 @@ func (m *Oauth2ProviderMapper) ToUnstructured(oauth2Provider *Oauth2Provider) un
 
 		var_Id_mapped = var_Id.String()
 		properties["id"] = var_Id_mapped
+	}
+
+	var_DefaultScopes := oauth2Provider.DefaultScopes
+
+	if var_DefaultScopes != nil {
+		var var_DefaultScopes_mapped interface{}
+
+		var var_DefaultScopes_l []interface{}
+		for _, value := range var_DefaultScopes {
+
+			var_5x := value
+			var var_5x_mapped interface{}
+
+			var_5x_mapped = var_5x
+
+			var_DefaultScopes_l = append(var_DefaultScopes_l, var_5x_mapped)
+		}
+		var_DefaultScopes_mapped = var_DefaultScopes_l
+		properties["defaultScopes"] = var_DefaultScopes_mapped
 	}
 
 	var_Name := oauth2Provider.Name
@@ -312,25 +331,6 @@ func (m *Oauth2ProviderMapper) ToUnstructured(oauth2Provider *Oauth2Provider) un
 
 		var_UserInfoExtractConfig_mapped = Oauth2ProviderUserInfoExtractMapperInstance.ToUnstructured(var_UserInfoExtractConfig)
 		properties["userInfoExtractConfig"] = var_UserInfoExtractConfig_mapped
-	}
-
-	var_DefaultScopes := oauth2Provider.DefaultScopes
-
-	if var_DefaultScopes != nil {
-		var var_DefaultScopes_mapped interface{}
-
-		var var_DefaultScopes_l []interface{}
-		for _, value := range var_DefaultScopes {
-
-			var_5x := value
-			var var_5x_mapped interface{}
-
-			var_5x_mapped = var_5x
-
-			var_DefaultScopes_l = append(var_DefaultScopes_l, var_5x_mapped)
-		}
-		var_DefaultScopes_mapped = var_DefaultScopes_l
-		properties["defaultScopes"] = var_DefaultScopes_mapped
 	}
 
 	var_Version := oauth2Provider.Version
@@ -402,7 +402,6 @@ func (m *Oauth2ProviderUserInfoExtractMapper) FromProperties(properties map[stri
 
 func (m *Oauth2ProviderUserInfoExtractMapper) ToUnstructured(oauth2ProviderUserInfoExtract *Oauth2ProviderUserInfoExtract) unstructured.Unstructured {
 	var properties unstructured.Unstructured = make(unstructured.Unstructured)
-	properties["type"] = "sso/Oauth2Provider"
 
 	var_Username := oauth2ProviderUserInfoExtract.Username
 

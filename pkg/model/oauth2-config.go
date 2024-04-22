@@ -10,17 +10,24 @@ import "github.com/google/uuid"
 
 type Oauth2Config struct {
 	Id           *uuid.UUID      `json:"id,omitempty"`
-	Scopes       []string        `json:"scopes,omitempty"`
-	NewUserRoles []string        `json:"newUserRoles,omitempty"`
-	Name         string          `json:"name,omitempty"`
-	Provider     *Oauth2Provider `json:"provider,omitempty"`
 	ClientId     string          `json:"clientId,omitempty"`
 	ClientSecret string          `json:"clientSecret,omitempty"`
+	Scopes       []string        `json:"scopes,omitempty"`
+	NewUserRoles []string        `json:"newUserRoles,omitempty"`
+	RedirectUrl  *string         `json:"redirectUrl,omitempty"`
+	Name         string          `json:"name,omitempty"`
+	Provider     *Oauth2Provider `json:"provider,omitempty"`
 	Version      int32           `json:"version,omitempty"`
 }
 
 func (s Oauth2Config) GetId() *uuid.UUID {
 	return s.Id
+}
+func (s Oauth2Config) GetClientId() string {
+	return s.ClientId
+}
+func (s Oauth2Config) GetClientSecret() string {
+	return s.ClientSecret
 }
 func (s Oauth2Config) GetScopes() []string {
 	return s.Scopes
@@ -28,17 +35,14 @@ func (s Oauth2Config) GetScopes() []string {
 func (s Oauth2Config) GetNewUserRoles() []string {
 	return s.NewUserRoles
 }
+func (s Oauth2Config) GetRedirectUrl() *string {
+	return s.RedirectUrl
+}
 func (s Oauth2Config) GetName() string {
 	return s.Name
 }
 func (s Oauth2Config) GetProvider() *Oauth2Provider {
 	return s.Provider
-}
-func (s Oauth2Config) GetClientId() string {
-	return s.ClientId
-}
-func (s Oauth2Config) GetClientSecret() string {
-	return s.ClientSecret
 }
 func (s Oauth2Config) GetVersion() int32 {
 	return s.Version

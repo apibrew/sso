@@ -2,6 +2,7 @@ type: resource
 name: Oauth2Request
 namespace:
   name: sso
+virtual: true
 properties:
   config:
     type: reference
@@ -9,3 +10,5 @@ properties:
     required: true
   redirectUrl:
     type: string
+annotations:
+  AllowPublicCreateAccess: "true"

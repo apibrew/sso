@@ -11,8 +11,13 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+type Mapper[T any] interface {
+	FromRecord(record *model.Record) T
+	ToRecord(entity T) *model.Record
+}
+
 type ResourceProcessor[T any] interface {
-	MapperTo(record *model.Record) T
+	Mapper() Mapper[T]
 
 	Register(entity T) error
 	Update(entity T) error
@@ -25,8 +30,8 @@ func RegisterResourceProcessor[T any](handlerName string,
 	container service.Container,
 	resource *model.Resource) error {
 	handler := func(ctx context.Context, event *model.Event) (*model.Event, errors.ServiceError) {
-		for _, record := range event.Records {
-			entity := processor.MapperTo(record)
+		for idx, record := range event.Records {
+			entity := processor.Mapper().FromRecord(record)
 
 			switch event.Action {
 			case model.Event_CREATE:
@@ -35,12 +40,16 @@ func RegisterResourceProcessor[T any](handlerName string,
 				if err != nil {
 					return nil, errors.RecordValidationError.WithMessage(fmt.Sprintf("%v", err))
 				}
+
+				event.Records[idx] = processor.Mapper().ToRecord(entity)
 			case model.Event_UPDATE:
 				err := processor.Update(entity)
 
 				if err != nil {
 					return nil, errors.RecordValidationError.WithMessage(fmt.Sprintf("%v", err))
 				}
+
+				event.Records[idx] = processor.Mapper().ToRecord(entity)
 			case model.Event_DELETE:
 				err := processor.UnRegister(entity)
 
@@ -80,7 +89,7 @@ func RegisterResourceProcessor[T any](handlerName string,
 	}
 
 	for _, record := range codeRecords {
-		entity := processor.MapperTo(record)
+		entity := processor.Mapper().FromRecord(record)
 
 		err := processor.Register(entity)
 

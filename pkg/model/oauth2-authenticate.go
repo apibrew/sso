@@ -10,6 +10,7 @@ import "github.com/google/uuid"
 
 type Oauth2Authenticate struct {
 	Id      *uuid.UUID    `json:"id,omitempty"`
+	Token   *string       `json:"token,omitempty"`
 	Config  *Oauth2Config `json:"config,omitempty"`
 	Code    string        `json:"code,omitempty"`
 	Version int32         `json:"version,omitempty"`
@@ -17,6 +18,9 @@ type Oauth2Authenticate struct {
 
 func (s Oauth2Authenticate) GetId() *uuid.UUID {
 	return s.Id
+}
+func (s Oauth2Authenticate) GetToken() *string {
+	return s.Token
 }
 func (s Oauth2Authenticate) GetConfig() *Oauth2Config {
 	return s.Config

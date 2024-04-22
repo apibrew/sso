@@ -41,9 +41,18 @@ var Oauth2ProviderResource = &model.Resource{
 			},
 		},
 		{
+			Name: "defaultScopes",
+			Type: model.ResourceProperty_LIST,
+			Item: &model.ResourceProperty{
+				Name: "",
+				Type: model.ResourceProperty_STRING,
+			},
+		},
+		{
 			Name:     "name",
 			Type:     model.ResourceProperty_STRING,
 			Required: true,
+			Unique:   true,
 		},
 		{
 			Name:     "authUrl",
@@ -64,14 +73,6 @@ var Oauth2ProviderResource = &model.Resource{
 			Name:    "userInfoExtractConfig",
 			Type:    model.ResourceProperty_STRUCT,
 			TypeRef: util.Pointer("UserInfoExtract"),
-		},
-		{
-			Name: "defaultScopes",
-			Type: model.ResourceProperty_LIST,
-			Item: &model.ResourceProperty{
-				Name: "",
-				Type: model.ResourceProperty_STRING,
-			},
 		},
 		{
 			Name:         "version",

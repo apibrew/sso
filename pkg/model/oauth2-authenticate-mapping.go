@@ -62,6 +62,19 @@ func (m *Oauth2AuthenticateMapper) ToProperties(oauth2Authenticate *Oauth2Authen
 		properties["id"] = var_Id_mapped
 	}
 
+	var_Token := oauth2Authenticate.Token
+
+	if var_Token != nil {
+		var var_Token_mapped *structpb.Value
+
+		var var_Token_err error
+		var_Token_mapped, var_Token_err = types.ByResourcePropertyType(model.ResourceProperty_STRING).Pack(*var_Token)
+		if var_Token_err != nil {
+			panic(var_Token_err)
+		}
+		properties["token"] = var_Token_mapped
+	}
+
 	var_Config := oauth2Authenticate.Config
 
 	if var_Config != nil {
@@ -111,6 +124,20 @@ func (m *Oauth2AuthenticateMapper) FromProperties(properties map[string]*structp
 
 		s.Id = var_Id_mapped
 	}
+	if properties["token"] != nil && properties["token"].AsInterface() != nil {
+
+		var_Token := properties["token"]
+		val, err := types.ByResourcePropertyType(model.ResourceProperty_STRING).UnPack(var_Token)
+
+		if err != nil {
+			panic(err)
+		}
+
+		var_Token_mapped := new(string)
+		*var_Token_mapped = val.(string)
+
+		s.Token = var_Token_mapped
+	}
 	if properties["config"] != nil && properties["config"].AsInterface() != nil {
 
 		var_Config := properties["config"]
@@ -158,6 +185,15 @@ func (m *Oauth2AuthenticateMapper) ToUnstructured(oauth2Authenticate *Oauth2Auth
 
 		var_Id_mapped = var_Id.String()
 		properties["id"] = var_Id_mapped
+	}
+
+	var_Token := oauth2Authenticate.Token
+
+	if var_Token != nil {
+		var var_Token_mapped interface{}
+
+		var_Token_mapped = *var_Token
+		properties["token"] = var_Token_mapped
 	}
 
 	var_Config := oauth2Authenticate.Config

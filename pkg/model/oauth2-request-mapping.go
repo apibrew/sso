@@ -62,15 +62,6 @@ func (m *Oauth2RequestMapper) ToProperties(oauth2Request *Oauth2Request) map[str
 		properties["id"] = var_Id_mapped
 	}
 
-	var_Config := oauth2Request.Config
-
-	if var_Config != nil {
-		var var_Config_mapped *structpb.Value
-
-		var_Config_mapped = structpb.NewStructValue(&structpb.Struct{Fields: Oauth2ConfigMapperInstance.ToProperties(var_Config)})
-		properties["config"] = var_Config_mapped
-	}
-
 	var_RedirectUrl := oauth2Request.RedirectUrl
 
 	if var_RedirectUrl != nil {
@@ -82,6 +73,15 @@ func (m *Oauth2RequestMapper) ToProperties(oauth2Request *Oauth2Request) map[str
 			panic(var_RedirectUrl_err)
 		}
 		properties["redirectUrl"] = var_RedirectUrl_mapped
+	}
+
+	var_Config := oauth2Request.Config
+
+	if var_Config != nil {
+		var var_Config_mapped *structpb.Value
+
+		var_Config_mapped = structpb.NewStructValue(&structpb.Struct{Fields: Oauth2ConfigMapperInstance.ToProperties(var_Config)})
+		properties["config"] = var_Config_mapped
 	}
 
 	var_Version := oauth2Request.Version
@@ -113,13 +113,6 @@ func (m *Oauth2RequestMapper) FromProperties(properties map[string]*structpb.Val
 
 		s.Id = var_Id_mapped
 	}
-	if properties["config"] != nil && properties["config"].AsInterface() != nil {
-
-		var_Config := properties["config"]
-		var_Config_mapped := Oauth2ConfigMapperInstance.FromProperties(var_Config.GetStructValue().Fields)
-
-		s.Config = var_Config_mapped
-	}
 	if properties["redirectUrl"] != nil && properties["redirectUrl"].AsInterface() != nil {
 
 		var_RedirectUrl := properties["redirectUrl"]
@@ -133,6 +126,13 @@ func (m *Oauth2RequestMapper) FromProperties(properties map[string]*structpb.Val
 		*var_RedirectUrl_mapped = val.(string)
 
 		s.RedirectUrl = var_RedirectUrl_mapped
+	}
+	if properties["config"] != nil && properties["config"].AsInterface() != nil {
+
+		var_Config := properties["config"]
+		var_Config_mapped := Oauth2ConfigMapperInstance.FromProperties(var_Config.GetStructValue().Fields)
+
+		s.Config = var_Config_mapped
 	}
 	if properties["version"] != nil && properties["version"].AsInterface() != nil {
 
@@ -163,15 +163,6 @@ func (m *Oauth2RequestMapper) ToUnstructured(oauth2Request *Oauth2Request) unstr
 		properties["id"] = var_Id_mapped
 	}
 
-	var_Config := oauth2Request.Config
-
-	if var_Config != nil {
-		var var_Config_mapped interface{}
-
-		var_Config_mapped = Oauth2ConfigMapperInstance.ToUnstructured(var_Config)
-		properties["config"] = var_Config_mapped
-	}
-
 	var_RedirectUrl := oauth2Request.RedirectUrl
 
 	if var_RedirectUrl != nil {
@@ -179,6 +170,15 @@ func (m *Oauth2RequestMapper) ToUnstructured(oauth2Request *Oauth2Request) unstr
 
 		var_RedirectUrl_mapped = *var_RedirectUrl
 		properties["redirectUrl"] = var_RedirectUrl_mapped
+	}
+
+	var_Config := oauth2Request.Config
+
+	if var_Config != nil {
+		var var_Config_mapped interface{}
+
+		var_Config_mapped = Oauth2ConfigMapperInstance.ToUnstructured(var_Config)
+		properties["config"] = var_Config_mapped
 	}
 
 	var_Version := oauth2Request.Version

@@ -6,6 +6,7 @@ properties:
   name:
     type: string
     required: true
+    unique: true
   provider:
     type: reference
     reference: sso/Oauth2Provider
@@ -23,3 +24,5 @@ properties:
     type: list
     item:
       type: string
+  redirectUrl:
+    type: string

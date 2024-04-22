@@ -6,6 +6,7 @@ properties:
   name:
     type: string
     required: true
+    unique: true
   authUrl:
     type: string
     required: true

@@ -8,7 +8,7 @@ import (
 	"github.com/apibrew/apibrew/pkg/service"
 	backend_event_handler "github.com/apibrew/apibrew/pkg/service/backend-event-handler"
 	"github.com/apibrew/apibrew/pkg/util"
-	model3 "github.com/apibrew/sso/pkg/model"
+	model2 "github.com/apibrew/sso/pkg/model"
 	"golang.org/x/oauth2/endpoints"
 	"google.golang.org/protobuf/types/known/structpb"
 	"log"
@@ -18,21 +18,38 @@ type module struct {
 	container           service.Container
 	backendEventHandler backend_event_handler.BackendEventHandler
 	api                 api.Interface
+	op                  *oauth2Provider
 }
 
 func (m module) Init() {
 	m.ensureNamespace()
 	m.ensureResources()
 
-	//if err := RegisterResourceProcessor[*model3.SsoConfig](
-	//	"sso-configure-listener",
-	//	&ssoConfigProcessor{},
-	//	m.backendEventHandler,
-	//	m.container,
-	//	model3.SsoConfigResource,
-	//); err != nil {
-	//	log.Fatal(err)
-	//}
+	if err := RegisterResourceProcessor[*model2.Oauth2Request](
+		"sso-oauth2-request-listener",
+		&requestOauth2CodeProcessor{
+			api: m.api,
+			op:  m.op,
+		},
+		m.backendEventHandler,
+		m.container,
+		model2.Oauth2RequestResource,
+	); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := RegisterResourceProcessor[*model2.Oauth2Authenticate](
+		"sso-oauth2-authenticate-listener",
+		&requestOauth2AuthenticateProcessor{
+			api: m.api,
+			op:  m.op,
+		},
+		m.backendEventHandler,
+		m.container,
+		model2.Oauth2AuthenticateResource,
+	); err != nil {
+		log.Fatal(err)
+	}
 
 	m.initDefaultProviders()
 }
@@ -57,10 +74,10 @@ func (m module) ensureNamespace() {
 
 func (m module) ensureResources() {
 	var list = []*model.Resource{
-		model3.Oauth2ProviderResource,
-		model3.Oauth2ConfigResource,
-		model3.Oauth2RequestResource,
-		model3.Oauth2AuthenticateResource,
+		model2.Oauth2ProviderResource,
+		model2.Oauth2ConfigResource,
+		model2.Oauth2RequestResource,
+		model2.Oauth2AuthenticateResource,
 	}
 
 	for _, resource := range list {
@@ -86,13 +103,13 @@ func (m module) ensureResources() {
 }
 
 func (m module) initDefaultProviders() {
-	var defaultProviders = []*model3.Oauth2Provider{
+	var defaultProviders = []*model2.Oauth2Provider{
 		{
 			Name:        "Amazon",
 			AuthUrl:     endpoints.Amazon.AuthURL,
 			TokenUrl:    endpoints.Amazon.TokenURL,
 			UserInfoUrl: "https://api.amazon.com/user/profile",
-			UserInfoExtractConfig: &model3.Oauth2ProviderUserInfoExtract{
+			UserInfoExtractConfig: &model2.Oauth2ProviderUserInfoExtract{
 				Username: util.Pointer("email"),
 			},
 			DefaultScopes: []string{"profile"},
@@ -102,17 +119,27 @@ func (m module) initDefaultProviders() {
 			AuthUrl:     endpoints.Google.AuthURL,
 			TokenUrl:    endpoints.Google.TokenURL,
 			UserInfoUrl: "https://www.googleapis.com/oauth2/v3/userinfo",
-			UserInfoExtractConfig: &model3.Oauth2ProviderUserInfoExtract{
+			UserInfoExtractConfig: &model2.Oauth2ProviderUserInfoExtract{
 				Username: util.Pointer("email"),
 			},
 			DefaultScopes: []string{"profile"},
+		},
+		{
+			Name:        "Github",
+			AuthUrl:     endpoints.GitHub.AuthURL,
+			TokenUrl:    endpoints.GitHub.TokenURL,
+			UserInfoUrl: "https://api.github.com/user",
+			UserInfoExtractConfig: &model2.Oauth2ProviderUserInfoExtract{
+				Username: util.Pointer("email"),
+			},
+			DefaultScopes: []string{"user:email"},
 		},
 		{
 			Name:        "Facebook",
 			AuthUrl:     endpoints.Facebook.AuthURL,
 			TokenUrl:    endpoints.Facebook.TokenURL,
 			UserInfoUrl: "https://graph.facebook.com/v3.2/me",
-			UserInfoExtractConfig: &model3.Oauth2ProviderUserInfoExtract{
+			UserInfoExtractConfig: &model2.Oauth2ProviderUserInfoExtract{
 				Username: util.Pointer("email"),
 			},
 			DefaultScopes: []string{"email"},
@@ -120,7 +147,7 @@ func (m module) initDefaultProviders() {
 	}
 
 	for _, provider := range defaultProviders {
-		_, err := m.api.Apply(util.SystemContext, model3.Oauth2ProviderMapperInstance.ToUnstructured(provider))
+		_, err := m.api.Apply(util.SystemContext, model2.Oauth2ProviderMapperInstance.ToUnstructured(provider))
 
 		if err != nil {
 			log.Fatal(err)
@@ -129,6 +156,11 @@ func (m module) initDefaultProviders() {
 }
 
 func NewModule(container service.Container) service.Module {
+	a := api.NewInterface(container)
+
 	backendEventHandler := container.GetBackendEventHandler().(backend_event_handler.BackendEventHandler)
-	return &module{container: container, api: api.NewInterface(container), backendEventHandler: backendEventHandler}
+	return &module{container: container,
+		api:                 a,
+		op:                  &oauth2Provider{container: container, api: a},
+		backendEventHandler: backendEventHandler}
 }

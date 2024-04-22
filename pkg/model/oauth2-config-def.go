@@ -28,6 +28,16 @@ var Oauth2ConfigResource = &model.Resource{
 			},
 		},
 		{
+			Name:     "clientId",
+			Type:     model.ResourceProperty_STRING,
+			Required: true,
+		},
+		{
+			Name:     "clientSecret",
+			Type:     model.ResourceProperty_STRING,
+			Required: true,
+		},
+		{
 			Name: "scopes",
 			Type: model.ResourceProperty_LIST,
 			Item: &model.ResourceProperty{
@@ -44,24 +54,19 @@ var Oauth2ConfigResource = &model.Resource{
 			},
 		},
 		{
+			Name: "redirectUrl",
+			Type: model.ResourceProperty_STRING,
+		},
+		{
 			Name:     "name",
 			Type:     model.ResourceProperty_STRING,
 			Required: true,
+			Unique:   true,
 		},
 		{
 			Name:      "provider",
 			Type:      model.ResourceProperty_REFERENCE,
 			Reference: &model.Reference{Resource: "Oauth2Provider", Namespace: "sso"},
-		},
-		{
-			Name:     "clientId",
-			Type:     model.ResourceProperty_STRING,
-			Required: true,
-		},
-		{
-			Name:     "clientSecret",
-			Type:     model.ResourceProperty_STRING,
-			Required: true,
 		},
 		{
 			Name:         "version",

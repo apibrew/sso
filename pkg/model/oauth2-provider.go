@@ -10,17 +10,20 @@ import "github.com/google/uuid"
 
 type Oauth2Provider struct {
 	Id                    *uuid.UUID                     `json:"id,omitempty"`
+	DefaultScopes         []string                       `json:"defaultScopes,omitempty"`
 	Name                  string                         `json:"name,omitempty"`
 	AuthUrl               string                         `json:"authUrl,omitempty"`
 	TokenUrl              string                         `json:"tokenUrl,omitempty"`
 	UserInfoUrl           string                         `json:"userInfoUrl,omitempty"`
 	UserInfoExtractConfig *Oauth2ProviderUserInfoExtract `json:"userInfoExtractConfig,omitempty"`
-	DefaultScopes         []string                       `json:"defaultScopes,omitempty"`
 	Version               int32                          `json:"version,omitempty"`
 }
 
 func (s Oauth2Provider) GetId() *uuid.UUID {
 	return s.Id
+}
+func (s Oauth2Provider) GetDefaultScopes() []string {
+	return s.DefaultScopes
 }
 func (s Oauth2Provider) GetName() string {
 	return s.Name
@@ -36,9 +39,6 @@ func (s Oauth2Provider) GetUserInfoUrl() string {
 }
 func (s Oauth2Provider) GetUserInfoExtractConfig() *Oauth2ProviderUserInfoExtract {
 	return s.UserInfoExtractConfig
-}
-func (s Oauth2Provider) GetDefaultScopes() []string {
-	return s.DefaultScopes
 }
 func (s Oauth2Provider) GetVersion() int32 {
 	return s.Version

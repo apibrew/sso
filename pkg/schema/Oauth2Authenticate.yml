@@ -2,6 +2,7 @@ type: resource
 name: Oauth2Authenticate
 namespace:
   name: sso
+virtual: true
 properties:
   config:
     type: reference
@@ -10,3 +11,7 @@ properties:
   code:
     type: string
     required: true
+  token:
+    type: string
+annotations:
+  AllowPublicCreateAccess: "true"
