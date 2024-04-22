@@ -1,0 +1,12 @@
+type: resource
+name: Oauth2Authenticate
+namespace:
+  name: sso
+properties:
+  config:
+    type: reference
+    reference: sso/Oauth2Config
+    required: true
+  code:
+    type: string
+    required: true

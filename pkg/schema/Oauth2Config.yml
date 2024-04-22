@@ -1,0 +1,25 @@
+type: resource
+name: Oauth2Config
+namespace:
+  name: sso
+properties:
+  name:
+    type: string
+    required: true
+  provider:
+    type: reference
+    reference: sso/Oauth2Provider
+  clientId:
+    type: string
+    required: true
+  clientSecret:
+    type: string
+    required: true
+  scopes:
+    type: list
+    item:
+      type: string
+  newUserRoles:
+    type: list
+    item:
+      type: string

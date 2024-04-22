@@ -1,0 +1,11 @@
+type: resource
+name: Oauth2Request
+namespace:
+  name: sso
+properties:
+  config:
+    type: reference
+    reference: sso/Oauth2Config
+    required: true
+  redirectUrl:
+    type: string

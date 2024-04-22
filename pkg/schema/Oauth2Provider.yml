@@ -1,0 +1,30 @@
+type: resource
+name: Oauth2Provider
+namespace:
+  name: sso
+properties:
+  name:
+    type: string
+    required: true
+  authUrl:
+    type: string
+    required: true
+  tokenUrl:
+    type: string
+    required: true
+  userInfoUrl:
+    type: string
+    required: true
+  userInfoExtractConfig:
+    type: struct
+    typeRef: UserInfoExtract
+  defaultScopes:
+    type: list
+    item:
+      type: string
+types:
+  - name: UserInfoExtract
+    description: Extract user information with json path
+    properties:
+      username:
+        type: string
