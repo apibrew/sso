@@ -10,6 +10,7 @@ require (
 )
 
 require (
+	github.com/apibrew/nano v1.0.15 // indirect
 	github.com/aws/aws-sdk-go v1.50.19 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/deepmap/oapi-codegen v1.8.2 // indirect
