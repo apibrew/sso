@@ -6,7 +6,7 @@ import (
 	"github.com/apibrew/apibrew/pkg/model"
 	"github.com/apibrew/apibrew/pkg/resources"
 	"github.com/apibrew/apibrew/pkg/service"
-	backend_event_handler "github.com/apibrew/apibrew/pkg/service/backend-event-handler"
+	"github.com/apibrew/apibrew/pkg/service/backend-event-handler"
 	"github.com/apibrew/apibrew/pkg/util"
 	model2 "github.com/apibrew/sso/pkg/model"
 	"golang.org/x/oauth2/endpoints"
@@ -25,11 +25,14 @@ func (m module) Init() {
 	m.ensureNamespace()
 	m.ensureResources()
 
+	oauth2ConfigRepository := api.NewRepository[*model2.Oauth2Config](m.api, model2.Oauth2ConfigMapperInstance)
+
 	if err := RegisterResourceProcessor[*model2.Oauth2Request](
 		"sso-oauth2-request-listener",
 		&requestOauth2CodeProcessor{
-			api: m.api,
-			op:  m.op,
+			api:                    m.api,
+			op:                     m.op,
+			oauth2ConfigRepository: oauth2ConfigRepository,
 		},
 		m.backendEventHandler,
 		m.container,
@@ -41,8 +44,9 @@ func (m module) Init() {
 	if err := RegisterResourceProcessor[*model2.Oauth2Authenticate](
 		"sso-oauth2-authenticate-listener",
 		&requestOauth2AuthenticateProcessor{
-			api: m.api,
-			op:  m.op,
+			api:                    m.api,
+			op:                     m.op,
+			oauth2ConfigRepository: oauth2ConfigRepository,
 		},
 		m.backendEventHandler,
 		m.container,

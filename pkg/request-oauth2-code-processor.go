@@ -9,8 +9,9 @@ import (
 )
 
 type requestOauth2CodeProcessor struct {
-	api api.Interface
-	op  *oauth2Provider
+	api                    api.Interface
+	op                     *oauth2Provider
+	oauth2ConfigRepository api.Repository[*model2.Oauth2Config]
 }
 
 func (r requestOauth2CodeProcessor) Mapper() Mapper[*model2.Oauth2Request] {
@@ -42,7 +43,6 @@ func (r requestOauth2CodeProcessor) Register(entity *model2.Oauth2Request) error
 
 func (r requestOauth2CodeProcessor) load(entity *model2.Oauth2Request) error {
 	var oauth2ConfigToLoad = model2.Oauth2ConfigMapperInstance.ToUnstructured(entity.Config)
-	oauth2ConfigToLoad["type"] = "sso/Oauth2Config"
 
 	oauth2ConfigToLoadRes, err := r.api.Load(util.SystemContext, oauth2ConfigToLoad, api.LoadParams{
 		ResolveReferences: []string{"$.provider"},

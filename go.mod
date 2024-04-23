@@ -3,14 +3,13 @@ module github.com/apibrew/sso
 go 1.20
 
 require (
-	github.com/apibrew/apibrew v1.3.77
+	github.com/apibrew/apibrew v1.3.81
 	github.com/google/uuid v1.5.0
 	github.com/sirupsen/logrus v1.9.3
 	google.golang.org/protobuf v1.30.0
 )
 
 require (
-	github.com/apibrew/nano v1.0.14 // indirect
 	github.com/aws/aws-sdk-go v1.50.19 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/deepmap/oapi-codegen v1.8.2 // indirect
